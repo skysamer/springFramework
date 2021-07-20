@@ -5,7 +5,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Service;
 
-import com.springbook.biz.user.UserVO;
+import com.springbook.view.user.UserVO;
 
 @Service
 @Aspect

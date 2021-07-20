@@ -19,37 +19,81 @@
 		base-package="com.springbook.biz"></context:component-scan>
 
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-	
+
 	<!-- DataSource 설정 -->
-	<context:property-placeholder location="classpath:config/database.properties"/>
-	
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="org.h2.Driver"/>
-		<property name="url" value="jdbc:h2:tcp://localhost/~/test"/>
-		<property name="username" value="sa"/>
-		<property name="password" value=""/>
+	<context:property-placeholder
+		location="classpath:config/database.properties" />
+
+	<bean
+		id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property
+			name="driverClassName"
+			value="org.h2.Driver" />
+		<property
+			name="url"
+			value="jdbc:h2:tcp://localhost/~/test" />
+		<property
+			name="username"
+			value="sa" />
+		<property
+			name="password"
+			value="" />
 	</bean>
-	
+
 	<!-- Transaction 설정 -->
-	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-	<property name="dataSource" ref="dataSource"></property>
+	<bean
+		id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property
+			name="dataSource"
+			ref="dataSource"></property>
 	</bean>
-	
-	<tx:advice id="txAdvice" transaction-manager="txManager">
-	<tx:attributes>
-	<tx:method name="get*" read-only="true"/>
-	<tx:method name="*"/>
-	</tx:attributes>
+
+	<tx:advice
+		id="txAdvice"
+		transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method
+				name="get*"
+				read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
 	</tx:advice>
-	
+
 	<aop:config>
-	<aop:pointcut expression="execution(* com.springbook.biz..*(..))" id="txPointcut"/>
-	<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+		<aop:pointcut
+			expression="execution(* com.springbook.biz..*(..))"
+			id="txPointcut" />
+		<aop:advisor
+			advice-ref="txAdvice"
+			pointcut-ref="txPointcut" />
 	</aop:config>
-	
+
 	<!-- Spring JDBC 설정 -->
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-	<property name="dataSource" ref="dataSource"/>
+	<bean
+		id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property
+			name="dataSource"
+			ref="dataSource" />
 	</bean>
-	
+
+	<!-- Mybatis 설정 -->
+	<bean
+		id="sqlSession"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property
+			name="dataSource"
+			ref="dataSource"></property>
+		<property
+			name="configLocation"
+			value="classpath:sql-map-config.xml"></property>
+	</bean>
+
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+
 </beans>
